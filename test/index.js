@@ -8,10 +8,15 @@ const resume = document.getElementById("btn-resume");
 
 const t = createTimeline({ defaults: { duration: 750 } });
 
+// t.label("start")
+//   .add(".green", { x: "535px" }, 500)
+//   .add(".yellow", { x: "535px" }, "start")
+//   .add(".red", { x: "535px" }, "<-=500");
+
 t.label("start")
-  .add(".green", { x: "535px" }, 500)
-  .add(".yellow", { x: "535px" }, "start")
-  .add(".red", { x: "535px" }, "<-=500");
+  .add(".green", { x: "535px" })
+  .add(".yellow", { x: "535px" })
+  .add(".red", { x: "535px" });
 
 pause.onclick = () => {
   t.pause();

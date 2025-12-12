@@ -1,51 +1,33 @@
-import {
-  defaults,
-  globals,
-  globalVersions,
-} from '../core/globals.js';
+import { defaults, globals, globalVersions } from "../core/globals.js";
 
-import {
-  tickModes,
-  isBrowser,
-  K,
-  doc,
-} from '../core/consts.js';
+import { tickModes, isBrowser, K, doc } from "../core/consts.js";
 
-import {
-  now,
-  forEachChildren,
-  removeChild,
-} from '../core/helpers.js';
+import { now, forEachChildren, removeChild } from "../core/helpers.js";
 
-import {
-  Clock,
-} from '../core/clock.js';
+import { Clock } from "../core/clock.js";
 
-import {
-  tick,
-} from '../core/render.js';
+import { tick } from "../core/render.js";
 
-import {
-  additive,
-} from '../animation/additive.js';
+import { additive } from "../animation/additive.js";
 
 /**
  * @import {
  *   DefaultsParams,
  * } from '../types/index.js'
-*/
+ */
 
 /**
  * @import {
  *   Tickable,
  * } from '../types/index.js'
-*/
+ */
 
-const engineTickMethod = /*#__PURE__*/ (() => isBrowser ? requestAnimationFrame : setImmediate)();
-const engineCancelMethod = /*#__PURE__*/ (() => isBrowser ? cancelAnimationFrame : clearImmediate)();
+const engineTickMethod = /*#__PURE__*/ (() =>
+  isBrowser ? requestAnimationFrame : setImmediate)();
+const engineCancelMethod = /*#__PURE__*/ (() =>
+  isBrowser ? cancelAnimationFrame : clearImmediate)();
 
 class Engine extends Clock {
-
   /** @param {Number} [initTime] */
   constructor(initTime) {
     super(initTime);
@@ -60,21 +42,25 @@ class Engine extends Clock {
   }
 
   update() {
-    const time = this._currentTime = now();
+    const time = (this._currentTime = now());
     if (this.requestTick(time)) {
       this.computeDeltaTime(time);
       const engineSpeed = this._speed;
       const engineFps = this._fps;
-      let activeTickable = /** @type {Tickable} */(this._head);
+      let activeTickable = /** @type {Tickable} */ (this._head);
       while (activeTickable) {
         const nextTickable = activeTickable._next;
         if (!activeTickable.paused) {
           tick(
             activeTickable,
-            (time - activeTickable._startTime) * activeTickable._speed * engineSpeed,
+            (time - activeTickable._startTime) *
+              activeTickable._speed *
+              engineSpeed,
             0, // !muteCallbacks
             0, // !internalRender
-            activeTickable._fps < engineFps ? activeTickable.requestTick(time) : tickModes.AUTO
+            activeTickable._fps < engineFps
+              ? activeTickable.requestTick(time)
+              : tickModes.AUTO
           );
         } else {
           removeChild(this, activeTickable);
@@ -108,7 +94,7 @@ class Engine extends Clock {
   resume() {
     if (!this.paused) return;
     this.paused = false;
-    forEachChildren(this, (/** @type {Tickable} */child) => child.resetTime());
+    forEachChildren(this, (/** @type {Tickable} */ child) => child.resetTime());
     return this.wake();
   }
 
@@ -119,17 +105,20 @@ class Engine extends Clock {
 
   set speed(playbackRate) {
     this._speed = playbackRate * globals.timeScale;
-    forEachChildren(this, (/** @type {Tickable} */child) => child.speed = child._speed);
+    forEachChildren(
+      this,
+      (/** @type {Tickable} */ child) => (child.speed = child._speed)
+    );
   }
 
   // Getter and setter for timeUnit
   get timeUnit() {
-    return globals.timeScale === 1 ? 'ms' : 's';
+    return globals.timeScale === 1 ? "ms" : "s";
   }
 
   set timeUnit(unit) {
     const secondsScale = 0.001;
-    const isSecond = unit === 's';
+    const isSecond = unit === "s";
     const newScale = isSecond ? secondsScale : 1;
     if (globals.timeScale !== newScale) {
       globals.timeScale = newScale;
@@ -149,21 +138,19 @@ class Engine extends Clock {
   set precision(precision) {
     globals.precision = precision;
   }
-
 }
 
-export const engine = /*#__PURE__*/(() => {
+export const engine = /*#__PURE__*/ (() => {
   const engine = new Engine(now());
   if (isBrowser) {
     globalVersions.engine = engine;
-    doc.addEventListener('visibilitychange', () => {
+    doc.addEventListener("visibilitychange", () => {
       if (!engine.pauseOnDocumentHidden) return;
       doc.hidden ? engine.pause() : engine.resume();
     });
   }
   return engine;
 })();
-
 
 const tickEngine = () => {
   if (engine._head) {
@@ -172,10 +159,10 @@ const tickEngine = () => {
   } else {
     engine.reqId = 0;
   }
-}
+};
 
 const killEngine = () => {
-  engineCancelMethod(/** @type {NodeJS.Immediate & Number} */(engine.reqId));
+  engineCancelMethod(/** @type {NodeJS.Immediate & Number} */ (engine.reqId));
   engine.reqId = 0;
   return engine;
-}
+};
