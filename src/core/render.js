@@ -112,6 +112,7 @@ export const render = (
     : isReversed
     ? iterationDuration - iterationElapsedTime
     : iterationElapsedTime;
+
   if (_ease)
     iterationTime =
       iterationDuration * _ease(iterationTime / iterationDuration) || 0;
@@ -221,9 +222,24 @@ export const render = (
             0,
             tweenChangeDuration
           ));
+
           const tweenProgress = tween._ease(
             tweenNewTime / tween._updateDuration
           );
+
+          console.log("--------------------");
+
+          console.log(
+            "tweenCurrentTime ",
+            iterationTime,
+            // " tweenComposition ",
+            // tweenComposition,
+            " tweenAbsEndTime ",
+            tweenAbsEndTime,
+            " target",
+            tween.target.className
+          );
+
           const tweenModifier = tween._modifier;
           const tweenValueType = tween._valueType;
           const tweenType = tween._tweenType;
@@ -263,19 +279,7 @@ export const render = (
               )
             );
             value = `${number}${tween._unit}`;
-            console.log("tweenNewTime ", tweenNewTime);
-            // console.log("tween._startTime ", tween._startTime);
-            console.log("className ", tween.target.className);
-
-            // console.log(
-            //   "value ",
-            //   value,
-            //   "tweenProgress ",
-            //   tweenProgress,
-            //   "tween.target[0]: ",
-            //   tween.target.className
-            // );
-
+            // console.log("first ", number);
             tween.target[0];
           } else if (tweenValueType === valueTypes.COLOR) {
             const fn = tween._fromNumbers;
