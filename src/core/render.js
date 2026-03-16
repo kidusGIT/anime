@@ -48,7 +48,7 @@ export const render = (
   time,
   muteCallbacks,
   internalRender,
-  tickMode
+  tickMode,
 ) => {
   const parent = tickable.parent;
   const duration = tickable.duration;
@@ -63,17 +63,19 @@ export const render = (
   const tickableDelay = tickable._delay;
   const tickablePrevAbsoluteTime = tickable._currentTime; // TODO: rename ._currentTime to ._absoluteCurrentTime
 
+  console.log("time ", time);
+
   const tickableEndTime = tickableDelay + iterationDuration;
   const tickableAbsoluteTime = time - tickableDelay;
   const tickablePrevTime = clamp(
     tickablePrevAbsoluteTime,
     -tickableDelay,
-    duration
+    duration,
   );
   const tickableCurrentTime = clamp(
     tickableAbsoluteTime,
     -tickableDelay,
-    duration
+    duration,
   );
   const deltaTime = tickableAbsoluteTime - tickablePrevAbsoluteTime;
   const isCurrentTimeAboveZero = tickableCurrentTime > 0;
@@ -110,8 +112,8 @@ export const render = (
       ? 0
       : duration
     : isReversed
-    ? iterationDuration - iterationElapsedTime
-    : iterationElapsedTime;
+      ? iterationDuration - iterationElapsedTime
+      : iterationElapsedTime;
 
   if (_ease)
     iterationTime =
@@ -220,24 +222,11 @@ export const render = (
           const tweenNewTime = (tween._currentTime = clamp(
             iterationTime - tween._startTime,
             0,
-            tweenChangeDuration
+            tweenChangeDuration,
           ));
 
           const tweenProgress = tween._ease(
-            tweenNewTime / tween._updateDuration
-          );
-
-          console.log("--------------------");
-
-          console.log(
-            "tweenCurrentTime ",
-            iterationTime,
-            // " tweenComposition ",
-            // tweenComposition,
-            " tweenAbsEndTime ",
-            tweenAbsEndTime,
-            " target",
-            tween.target.className
+            tweenNewTime / tween._updateDuration,
           );
 
           const tweenModifier = tween._modifier;
@@ -264,8 +253,8 @@ export const render = (
               tweenModifier(
                 round(
                   lerp(tween._fromNumber, tween._toNumber, tweenProgress),
-                  tweenPrecision
-                )
+                  tweenPrecision,
+                ),
               )
             );
           } else if (tweenValueType === valueTypes.UNIT) {
@@ -274,8 +263,8 @@ export const render = (
               tweenModifier(
                 round(
                   lerp(tween._fromNumber, tween._toNumber, tweenProgress),
-                  tweenPrecision
-                )
+                  tweenPrecision,
+                ),
               )
             );
             value = `${number}${tween._unit}`;
@@ -290,9 +279,9 @@ export const render = (
                   tweenModifier(lerp(fn[0], tn[0], tweenProgress))
                 ),
                 0,
-                255
+                255,
               ),
-              0
+              0,
             );
             const g = round(
               clamp(
@@ -300,9 +289,9 @@ export const render = (
                   tweenModifier(lerp(fn[1], tn[1], tweenProgress))
                 ),
                 0,
-                255
+                255,
               ),
-              0
+              0,
             );
             const b = round(
               clamp(
@@ -310,18 +299,18 @@ export const render = (
                   tweenModifier(lerp(fn[2], tn[2], tweenProgress))
                 ),
                 0,
-                255
+                255,
               ),
-              0
+              0,
             );
             const a = clamp(
               /** @type {Number} */ (
                 tweenModifier(
-                  round(lerp(fn[3], tn[3], tweenProgress), tweenPrecision)
+                  round(lerp(fn[3], tn[3], tweenProgress), tweenPrecision),
                 )
               ),
               0,
-              1
+              1,
             );
             value = `rgba(${r},${g},${b},${a})`;
             if (tweenHasComposition) {
@@ -340,10 +329,10 @@ export const render = (
                     lerp(
                       tween._fromNumbers[j],
                       tween._toNumbers[j],
-                      tweenProgress
+                      tweenProgress,
                     ),
-                    tweenPrecision
-                  )
+                    tweenPrecision,
+                  ),
                 )
               );
               const s = tween._strings[j + 1];
@@ -368,7 +357,7 @@ export const render = (
             } else if (tweenType === tweenTypes.ATTRIBUTE) {
               /** @type {DOMTarget} */ (tweenTarget).setAttribute(
                 tweenProperty,
-                /** @type {String} */ (value)
+                /** @type {String} */ (value),
               );
             } else {
               tweenStyle = /** @type {DOMTarget} */ (tweenTarget).style;
@@ -386,7 +375,7 @@ export const render = (
               } else if (tweenType === tweenTypes.CSS_VAR) {
                 tweenStyle.setProperty(
                   tweenProperty,
-                  /** @type {String} */ (value)
+                  /** @type {String} */ (value),
                 );
               }
             }
@@ -414,7 +403,7 @@ export const render = (
 
       if (!muteCallbacks && hasRendered) {
         /** @type {JSAnimation} */ (tickable).onRender(
-          /** @type {JSAnimation} */ (tickable)
+          /** @type {JSAnimation} */ (tickable),
         );
       }
     }
@@ -483,7 +472,7 @@ export const tick = (
   time,
   muteCallbacks,
   internalRender,
-  tickMode
+  tickMode,
 ) => {
   const _currentIteration = tickable._currentIteration;
   render(tickable, time, muteCallbacks, internalRender, tickMode);
@@ -512,7 +501,7 @@ export const tick = (
               tlIterationDuration,
               muteCallbacks,
               1,
-              tickModes.FORCE
+              tickModes.FORCE,
             );
           }
           // Reset their began and completed flags to allow retrigering callbacks on the next iteration
@@ -540,7 +529,7 @@ export const tick = (
       (/** @type {JSAnimation} */ child) => {
         const childTime = round(
           (tlChildrenTime - child._offset) * child._speed,
-          12
+          12,
         ); // Rounding is needed when using seconds
         const childTickMode =
           child._fps < tl._fps
@@ -551,12 +540,12 @@ export const tick = (
           childTime,
           muteCallbacks,
           internalRender,
-          childTickMode
+          childTickMode,
         );
         if (!child.completed && tlChildrenHaveCompleted)
           tlChildrenHaveCompleted = false;
       },
-      tlIsRunningBackwards
+      tlIsRunningBackwards,
     );
 
     // Renders on timeline are triggered by its children so it needs to be set after rendering the children

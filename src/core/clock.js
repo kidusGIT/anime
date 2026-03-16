@@ -1,27 +1,19 @@
-import {
-  K,
-  maxFps,
-  minValue,
-  tickModes,
-} from './consts.js';
+import { K, maxFps, minValue, tickModes } from "./consts.js";
 
-import {
-  round,
-} from './helpers.js';
+import { round } from "./helpers.js";
 
 /**
  * @import {
  *   Tickable,
  *   Tween,
  * } from '../types/index.js'
-*/
+ */
 
 /*
  * Base class to control framerate and playback rate.
  * Inherited by Engine, Timer, Animation and Timeline.
  */
 export class Clock {
-
   /** @param {Number} [initTime] */
   constructor(initTime = 0) {
     /** @type {Number} */
@@ -80,16 +72,18 @@ export class Clock {
   requestTick(time) {
     const scheduledTime = this._scheduledTime;
     const elapsedTime = this._elapsedTime;
-    this._elapsedTime += (time - elapsedTime);
+    this._elapsedTime += time - elapsedTime;
     // If the elapsed time is lower than the scheduled time
     // this means not enough time has passed to hit one frameDuration
     // so skip that frame
+    // console.log("Tick ", elapsedTime, " - ", time - elapsedTime);
     if (elapsedTime < scheduledTime) return tickModes.NONE;
     const frameDuration = this._frameDuration;
     const frameDelta = elapsedTime - scheduledTime;
     // Ensures that _scheduledTime progresses in steps of at least 1 frameDuration.
     // Skips ahead if the actual elapsed time is higher.
-    this._scheduledTime += frameDelta < frameDuration ? frameDuration : frameDelta;
+    this._scheduledTime +=
+      frameDelta < frameDuration ? frameDuration : frameDelta;
     return tickModes.AUTO;
   }
 
@@ -103,5 +97,4 @@ export class Clock {
     this._lastTime = time;
     return delta;
   }
-
 }

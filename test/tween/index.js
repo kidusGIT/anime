@@ -20,12 +20,13 @@ const resume = document.getElementById("btn-resume");
 //   .add(".yellow", { x: "535px" })
 //   .add(".red", { x: "535px" });
 
-const t = animate(".ball", {
+const t = animate(".yellow", {
   x: 535,
+  duration: 3000,
   // delay: stagger(100),
   // duration: stagger(700, { start: 15 }),
-  loop: 4,
-  alternate: true,
+  // loop: 4,
+  // alternate: true,
 });
 
 pause.onclick = () => {

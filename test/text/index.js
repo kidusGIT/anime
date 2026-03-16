@@ -5,7 +5,10 @@ const reverse = document.getElementById("btn-reverse");
 const play = document.getElementById("btn-play");
 const resume = document.getElementById("btn-resume");
 
-const { chars } = splitText(".animate-text", { words: false, chars: true });
+const { chars, words } = splitText(".animate-text", {
+  words: true,
+  chars: true,
+});
 console.log("chars ", chars);
 
 let t;
