@@ -20,8 +20,10 @@ const resume = document.getElementById("btn-resume");
 //   .add(".yellow", { x: "535px" })
 //   .add(".red", { x: "535px" });
 
-const t = animate(".yellow", {
+const t = animate(".green", {
   x: 535,
+  rotate: 180,
+  // scale: [1, 0.2, 0.5, 1],
   duration: 3000,
   // delay: stagger(100),
   // duration: stagger(700, { start: 15 }),

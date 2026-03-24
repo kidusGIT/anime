@@ -1,32 +1,14 @@
-import {
-  doc,
-  isBrowser,
-} from '../core/consts.js';
+import { doc, isBrowser } from "../core/consts.js";
 
-import {
-  scope,
-} from '../core/globals.js';
+import { scope } from "../core/globals.js";
 
-import {
-  isFnc,
-  isNum,
-  isStr,
-  isObj,
-  isUnd,
-  isArr,
-} from '../core/helpers.js';
+import { isFnc, isNum, isStr, isObj, isUnd, isArr } from "../core/helpers.js";
 
-import {
-  getNodeList,
-} from '../core/targets.js';
+import { getNodeList } from "../core/targets.js";
 
-import {
-  setValue,
-} from '../core/values.js';
+import { setValue } from "../core/values.js";
 
-import {
-  keepTime,
-} from '../utils/time.js';
+import { keepTime } from "../utils/time.js";
 
 /**
  * @import {
@@ -36,16 +18,16 @@ import {
  *   SplitFunctionValue,
  *   TextSplitterParams,
  * } from '../types/index.js'
-*/
+ */
 
-const segmenter = (typeof Intl !== 'undefined') && Intl.Segmenter;
+const segmenter = typeof Intl !== "undefined" && Intl.Segmenter;
 const valueRgx = /\{value\}/g;
 const indexRgx = /\{i\}/g;
 const whiteSpaceGroupRgx = /(\s+)/;
 const whiteSpaceRgx = /^\s+$/;
-const lineType = 'line';
-const wordType = 'word';
-const charType = 'char';
+const lineType = "line";
+const wordType = "word";
+const charType = "char";
 const dataLine = `data-line`;
 
 /**
@@ -69,30 +51,36 @@ let $splitTemplate = null;
  * @param  {Segment} seg
  * @return {Boolean}
  */
-const isSegmentWordLike = seg => {
-  return seg.isWordLike ||
-         seg.segment === ' ' || // Consider spaces as words first, then handle them diffrently later
-         isNum(+seg.segment);   // Safari doesn't considers numbers as words
-}
+const isSegmentWordLike = (seg) => {
+  return (
+    seg.isWordLike ||
+    seg.segment === " " || // Consider spaces as words first, then handle them differently later
+    isNum(+seg.segment)
+  ); // Safari doesn't considers numbers as words
+};
 
 /**
  * @param {HTMLElement} $el
  */
-const setAriaHidden = $el => $el.setAttribute('aria-hidden', 'true');
+const setAriaHidden = ($el) => $el.setAttribute("aria-hidden", "true");
 
 /**
  * @param {DOMTarget} $el
  * @param {String} type
  * @return {Array<HTMLElement>}
  */
-const getAllTopLevelElements = ($el, type) => [.../** @type {*} */($el.querySelectorAll(`[data-${type}]:not([data-${type}] [data-${type}])`))];
+const getAllTopLevelElements = ($el, type) => [
+  .../** @type {*} */ (
+    $el.querySelectorAll(`[data-${type}]:not([data-${type}] [data-${type}])`)
+  ),
+];
 
-const debugColors = { line: '#00D672', word: '#FF4B4B', char: '#5A87FF' };
+const debugColors = { line: "#00D672", word: "#FF4B4B", char: "#5A87FF" };
 
 /**
  * @param {HTMLElement} $el
  */
-const filterEmptyElements = $el => {
+const filterEmptyElements = ($el) => {
   if (!$el.childElementCount && !$el.textContent.trim()) {
     const $parent = $el.parentElement;
     $el.remove();
@@ -108,11 +96,20 @@ const filterEmptyElements = $el => {
  */
 const filterLineElements = ($el, lineIndex, bin) => {
   const dataLineAttr = $el.getAttribute(dataLine);
-  if (dataLineAttr !== null && +dataLineAttr !== lineIndex || $el.tagName === 'BR') bin.add($el);
+  if (
+    (dataLineAttr !== null && +dataLineAttr !== lineIndex) ||
+    $el.tagName === "BR"
+  )
+    bin.add($el);
   let i = $el.childElementCount;
-  while (i--) filterLineElements(/** @type {HTMLElement} */($el.children[i]), lineIndex, bin);
+  while (i--)
+    filterLineElements(
+      /** @type {HTMLElement} */ ($el.children[i]),
+      lineIndex,
+      bin,
+    );
   return bin;
-}
+};
 
 /**
  * @param  {'line'|'word'|'char'} type
@@ -121,15 +118,24 @@ const filterLineElements = ($el, lineIndex, bin) => {
  */
 const generateTemplate = (type, params = {}) => {
   let template = ``;
-  const classString = isStr(params.class) ? ` class="${params.class}"` : '';
+  const classString = isStr(params.class) ? ` class="${params.class}"` : "";
   const cloneType = setValue(params.clone, false);
   const wrapType = setValue(params.wrap, false);
-  const overflow = wrapType ? wrapType === true ? 'clip' : wrapType : cloneType ? 'clip' : false;
-  if (wrapType) template += `<span${overflow ? ` style="overflow:${overflow};"` : ''}>`;
-  template += `<span${classString}${cloneType ? ` style="position:relative;"` : ''} data-${type}="{i}">`;
+  const overflow = wrapType
+    ? wrapType === true
+      ? "clip"
+      : wrapType
+    : cloneType
+      ? "clip"
+      : false;
+  if (wrapType)
+    template += `<span${overflow ? ` style="overflow:${overflow};"` : ""}>`;
+  template += `<span${classString}${cloneType ? ` style="position:relative;"` : ""} data-${type}="{i}">`;
   if (cloneType) {
-    const left = cloneType === 'left' ? '-100%' : cloneType === 'right' ? '100%' : '0';
-    const top = cloneType === 'top' ? '-100%' : cloneType === 'bottom' ? '100%' : '0';
+    const left =
+      cloneType === "left" ? "-100%" : cloneType === "right" ? "100%" : "0";
+    const top =
+      cloneType === "top" ? "-100%" : cloneType === "bottom" ? "100%" : "0";
     template += `<span>{value}</span>`;
     template += `<span inert style="position:absolute;top:${top};left:${left};white-space:nowrap;">{value}</span>`;
   } else {
@@ -138,7 +144,7 @@ const generateTemplate = (type, params = {}) => {
   template += `</span>`;
   if (wrapType) template += `</span>`;
   return template;
-}
+};
 
 /**
  * @param  {String|SplitFunctionValue} htmlTemplate
@@ -152,27 +158,46 @@ const generateTemplate = (type, params = {}) => {
  * @param  {Number} [charIndex]
  * @return {HTMLElement}
  */
-const processHTMLTemplate = (htmlTemplate, store, node, $parentFragment, type, debug, lineIndex, wordIndex, charIndex) => {
+const processHTMLTemplate = (
+  htmlTemplate,
+  store,
+  node,
+  $parentFragment,
+  type,
+  debug,
+  lineIndex,
+  wordIndex,
+  charIndex,
+) => {
   const isLine = type === lineType;
   const isChar = type === charType;
   const className = `_${type}_`;
   const template = isFnc(htmlTemplate) ? htmlTemplate(node) : htmlTemplate;
-  const displayStyle = isLine ? 'block' : 'inline-block';
+  const displayStyle = isLine ? "block" : "inline-block";
   $splitTemplate.innerHTML = template
     .replace(valueRgx, `<i class="${className}"></i>`)
-    .replace(indexRgx, `${isChar ? charIndex : isLine ? lineIndex : wordIndex}`);
+    .replace(
+      indexRgx,
+      `${isChar ? charIndex : isLine ? lineIndex : wordIndex}`,
+    );
   const $content = $splitTemplate.content;
-  const $highestParent = /** @type {HTMLElement} */($content.firstElementChild);
-  const $split = /** @type {HTMLElement} */($content.querySelector(`[data-${type}]`)) || $highestParent;
-  const $replacables = /** @type {NodeListOf<HTMLElement>} */($content.querySelectorAll(`i.${className}`));
+  const $highestParent = /** @type {HTMLElement} */ (
+    $content.firstElementChild
+  );
+  const $split =
+    /** @type {HTMLElement} */ ($content.querySelector(`[data-${type}]`)) ||
+    $highestParent;
+  const $replacables = /** @type {NodeListOf<HTMLElement>} */ (
+    $content.querySelectorAll(`i.${className}`)
+  );
   const replacablesLength = $replacables.length;
   if (replacablesLength) {
     $highestParent.style.display = displayStyle;
     $split.style.display = displayStyle;
     $split.setAttribute(dataLine, `${lineIndex}`);
     if (!isLine) {
-      $split.setAttribute('data-word', `${wordIndex}`);
-      if (isChar) $split.setAttribute('data-char', `${charIndex}`);
+      $split.setAttribute("data-word", `${wordIndex}`);
+      if (isChar) $split.setAttribute("data-char", `${charIndex}`);
     }
     let i = replacablesLength;
     while (i--) {
@@ -180,7 +205,7 @@ const processHTMLTemplate = (htmlTemplate, store, node, $parentFragment, type, d
       const $closestParent = $replace.parentElement;
       $closestParent.style.display = displayStyle;
       if (isLine) {
-        $closestParent.innerHTML = /** @type {HTMLElement} */(node).innerHTML;
+        $closestParent.innerHTML = /** @type {HTMLElement} */ (node).innerHTML;
       } else {
         $closestParent.replaceChild(node.cloneNode(true), $replace);
       }
@@ -188,11 +213,13 @@ const processHTMLTemplate = (htmlTemplate, store, node, $parentFragment, type, d
     store.push($split);
     $parentFragment.appendChild($content);
   } else {
-    console.warn(`The expression "{value}" is missing from the provided template.`);
+    console.warn(
+      `The expression "{value}" is missing from the provided template.`,
+    );
   }
   if (debug) $highestParent.style.outline = `1px dotted ${debugColors[type]}`;
   return $highestParent;
-}
+};
 
 /**
  * A class that splits text into words and wraps them in span elements while preserving the original HTML structure.
@@ -205,40 +232,69 @@ export class TextSplitter {
    */
   constructor(target, parameters = {}) {
     // Only init segmenters when needed
-    if (!wordSegmenter) wordSegmenter = segmenter ? new segmenter([], { granularity: wordType }) : {
-      segment: (text) => {
-        const segments = [];
-        const words = text.split(whiteSpaceGroupRgx);
-        for (let i = 0, l = words.length; i < l; i++) {
-          const segment = words[i];
-          segments.push({
-            segment,
-            isWordLike: !whiteSpaceRgx.test(segment), // Consider non-whitespace as word-like
-          });
-        }
-        return segments;
-      }
-    }
-    if (!graphemeSegmenter) graphemeSegmenter = segmenter ? new segmenter([], { granularity: 'grapheme' }) : {
-      segment: text => [...text].map(char => ({ segment: char }))
-    }
-    if (!$splitTemplate && isBrowser) $splitTemplate = doc.createElement('template');
+    if (!wordSegmenter)
+      wordSegmenter = segmenter
+        ? new segmenter([], { granularity: wordType })
+        : {
+            segment: (text) => {
+              const segments = [];
+              const words = text.split(whiteSpaceGroupRgx);
+              for (let i = 0, l = words.length; i < l; i++) {
+                const segment = words[i];
+                segments.push({
+                  segment,
+                  isWordLike: !whiteSpaceRgx.test(segment), // Consider non-whitespace as word-like
+                });
+              }
+              return segments;
+            },
+          };
+    if (!graphemeSegmenter)
+      graphemeSegmenter = segmenter
+        ? new segmenter([], { granularity: "grapheme" })
+        : {
+            segment: (text) => [...text].map((char) => ({ segment: char })),
+          };
+    if (!$splitTemplate && isBrowser)
+      $splitTemplate = doc.createElement("template");
     if (scope.current) scope.current.register(this);
-    const { words, chars, lines, accessible, includeSpaces, debug } = parameters;
-    const $target = /** @type {HTMLElement} */((target = isArr(target) ? target[0] : target) && /** @type {Node} */(target).nodeType ? target : (getNodeList(target) || [])[0]);
+    const { words, chars, lines, accessible, includeSpaces, debug } =
+      parameters;
+    const $target = /** @type {HTMLElement} */ (
+      (target = isArr(target) ? target[0] : target) &&
+      /** @type {Node} */ (target).nodeType
+        ? target
+        : (getNodeList(target) || [])[0]
+    );
     const lineParams = lines === true ? {} : lines;
     const wordParams = words === true || isUnd(words) ? {} : words;
     const charParams = chars === true ? {} : chars;
-    this.debug = setValue(debug, false);
+    this.debug = setValue(debug, true);
     this.includeSpaces = setValue(includeSpaces, false);
     this.accessible = setValue(accessible, true);
-    this.linesOnly = lineParams && (!wordParams && !charParams);
+    this.linesOnly = lineParams && !wordParams && !charParams;
     /** @type {String|false|SplitFunctionValue} */
-    this.lineTemplate = isObj(lineParams) ? generateTemplate(lineType, /** @type {SplitTemplateParams} */(lineParams)) : lineParams;
+    this.lineTemplate = isObj(lineParams)
+      ? generateTemplate(
+          lineType,
+          /** @type {SplitTemplateParams} */ (lineParams),
+        )
+      : lineParams;
     /** @type {String|false|SplitFunctionValue} */
-    this.wordTemplate = isObj(wordParams) || this.linesOnly ? generateTemplate(wordType, /** @type {SplitTemplateParams} */(wordParams)) : wordParams;
+    this.wordTemplate =
+      isObj(wordParams) || this.linesOnly
+        ? generateTemplate(
+            wordType,
+            /** @type {SplitTemplateParams} */ (wordParams),
+          )
+        : wordParams;
     /** @type {String|false|SplitFunctionValue} */
-    this.charTemplate = isObj(charParams) ? generateTemplate(charType, /** @type {SplitTemplateParams} */(charParams)) : charParams;
+    this.charTemplate = isObj(charParams)
+      ? generateTemplate(
+          charType,
+          /** @type {SplitTemplateParams} */ (charParams),
+        )
+      : charParams;
     this.$target = $target;
     this.html = $target && $target.innerHTML;
     this.lines = [];
@@ -250,13 +306,14 @@ export class TextSplitter {
     this.ready = false;
     this.width = 0;
     this.resizeTimeout = null;
-    const handleSplit = () => this.html && (lineParams || wordParams || charParams) && this.split();
+    const handleSplit = () =>
+      this.html && (lineParams || wordParams || charParams) && this.split();
     // Make sure this is declared before calling handleSplit() in case revert() is called inside an effect callback
     this.resizeObserver = new ResizeObserver(() => {
       // Use a setTimeout instead of a Timer for better tree shaking
       clearTimeout(this.resizeTimeout);
       this.resizeTimeout = setTimeout(() => {
-        const currentWidth = /** @type {HTMLElement} */($target).offsetWidth;
+        const currentWidth = /** @type {HTMLElement} */ ($target).offsetWidth;
         if (currentWidth === this.width) return;
         this.width = currentWidth;
         handleSplit();
@@ -268,7 +325,9 @@ export class TextSplitter {
     } else {
       handleSplit();
     }
-    $target ? this.resizeObserver.observe($target) : console.warn('No Text Splitter target found.');
+    $target
+      ? this.resizeObserver.observe($target)
+      : console.warn("No Text Splitter target found.");
   }
 
   /**
@@ -276,10 +335,11 @@ export class TextSplitter {
    * @return this
    */
   addEffect(effect) {
-    if (!isFnc(effect)) return console.warn('Effect must return a function.');
+    if (!isFnc(effect)) return console.warn("Effect must return a function.");
     const refreshableEffect = keepTime(effect);
     this.effects.push(refreshableEffect);
-    if (this.ready) this.effectsCleanups[this.effects.length - 1] = refreshableEffect(this);
+    if (this.ready)
+      this.effectsCleanups[this.effects.length - 1] = refreshableEffect(this);
     return this;
   }
 
@@ -288,7 +348,9 @@ export class TextSplitter {
     this.lines.length = this.words.length = this.chars.length = 0;
     this.resizeObserver.disconnect();
     // Make sure to revert the effects after disconnecting the resizeObserver to avoid triggering it in the process
-    this.effectsCleanups.forEach(cleanup => isFnc(cleanup) ? cleanup(this) : cleanup.revert && cleanup.revert());
+    this.effectsCleanups.forEach((cleanup) =>
+      isFnc(cleanup) ? cleanup(this) : cleanup.revert && cleanup.revert(),
+    );
     this.$target.innerHTML = this.html;
     return this;
   }
@@ -317,13 +379,16 @@ export class TextSplitter {
           const segment = wordSegment.segment;
           const isWordLike = isSegmentWordLike(wordSegment);
           // Determine if this segment should be a new word, first segment always becomes a new word
-          if (!prevSeg || (isWordLike && (prevSeg && (isSegmentWordLike(prevSeg))))) {
+          if (
+            !prevSeg ||
+            (isWordLike && prevSeg && isSegmentWordLike(prevSeg))
+          ) {
             tempWords.push(segment);
           } else {
             // Only concatenate if both current and previous are non-word-like and don't contain spaces
             const lastWordIndex = tempWords.length - 1;
             const lastWord = tempWords[lastWordIndex];
-            if (!lastWord.includes(' ') && !segment.includes(' ')) {
+            if (!lastWord.includes(" ") && !segment.includes(" ")) {
               tempWords[lastWordIndex] += segment;
             } else {
               tempWords.push(segment);
@@ -340,23 +405,53 @@ export class TextSplitter {
             $wordsFragment.appendChild(doc.createTextNode(word));
           } else {
             const nextWord = tempWords[i + 1];
-            const hasWordFollowingSpace = includeSpaces && nextWord && !nextWord.trim();
+            const hasWordFollowingSpace =
+              includeSpaces && nextWord && !nextWord.trim();
             const wordToProcess = word;
-            const charSegments = charTemplate ? graphemeSegmenter.segment(wordToProcess) : null;
-            const $charsFragment = charTemplate ? doc.createDocumentFragment() : doc.createTextNode(hasWordFollowingSpace ? word + '\xa0' : word);
+            const charSegments = charTemplate
+              ? graphemeSegmenter.segment(wordToProcess)
+              : null;
+            const $charsFragment = charTemplate
+              ? doc.createDocumentFragment()
+              : doc.createTextNode(
+                  hasWordFollowingSpace ? word + "\xa0" : word,
+                );
             if (charTemplate) {
               const charSegmentsArray = [...charSegments];
               for (let j = 0, jl = charSegmentsArray.length; j < jl; j++) {
                 const charSegment = charSegmentsArray[j];
                 const isLastChar = j === jl - 1;
                 // If this is the last character and includeSpaces is true with a following space, append the space
-                const charText = isLastChar && hasWordFollowingSpace ? charSegment.segment + '\xa0' : charSegment.segment;
+                const charText =
+                  isLastChar && hasWordFollowingSpace
+                    ? charSegment.segment + "\xa0"
+                    : charSegment.segment;
                 const $charNode = doc.createTextNode(charText);
-                processHTMLTemplate(charTemplate, chars, $charNode, /** @type {DocumentFragment} */($charsFragment), charType, debug, -1, words.length, chars.length);
+                processHTMLTemplate(
+                  charTemplate,
+                  chars,
+                  $charNode,
+                  /** @type {DocumentFragment} */ ($charsFragment),
+                  charType,
+                  debug,
+                  -1,
+                  words.length,
+                  chars.length,
+                );
               }
             }
             if (wordTemplate) {
-              processHTMLTemplate(wordTemplate, words, $charsFragment, $wordsFragment, wordType, debug, -1, words.length, chars.length);
+              processHTMLTemplate(
+                wordTemplate,
+                words,
+                $charsFragment,
+                $wordsFragment,
+                wordType,
+                debug,
+                -1,
+                words.length,
+                chars.length,
+              );
               // Chars elements must be re-parsed in the split() method if both words and chars are parsed
             } else if (charTemplate) {
               $wordsFragment.appendChild($charsFragment);
@@ -371,8 +466,11 @@ export class TextSplitter {
       }
     } else if (nodeType === 1) {
       // Converting to an array is necessary to work around childNodes pottential mutation
-      const childNodes = /** @type {Array<Node>} */([.../** @type {*} */(node.childNodes)]);
-      for (let i = 0, l = childNodes.length; i < l; i++) this.splitNode(childNodes[i]);
+      const childNodes = /** @type {Array<Node>} */ ([
+        .../** @type {*} */ (node.childNodes),
+      ]);
+      for (let i = 0, l = childNodes.length; i < l; i++)
+        this.splitNode(childNodes[i]);
     }
   }
 
@@ -386,12 +484,14 @@ export class TextSplitter {
     const lineTemplate = this.lineTemplate;
     const wordTemplate = this.wordTemplate;
     const charTemplate = this.charTemplate;
-    const fontsReady = doc.fonts.status !== 'loading';
+    const fontsReady = doc.fonts.status !== "loading";
     const canSplitLines = lineTemplate && fontsReady;
     this.ready = !lineTemplate || fontsReady;
     if (canSplitLines || clearCache) {
       // No need to revert effects animations here since it's already taken care by the refreshable
-      this.effectsCleanups.forEach(cleanup => isFnc(cleanup) && cleanup(this));
+      this.effectsCleanups.forEach(
+        (cleanup) => isFnc(cleanup) && cleanup(this),
+      );
     }
     if (!isCached) {
       if (clearCache) {
@@ -412,11 +512,12 @@ export class TextSplitter {
     }
     // Words are used when lines only and prioritized over chars
     const elementsArray = this.words.length ? this.words : this.chars;
-    let y, linesCount = 0;
+    let y,
+      linesCount = 0;
     for (let i = 0, l = elementsArray.length; i < l; i++) {
       const $el = elementsArray[i];
       const { top, height } = $el.getBoundingClientRect();
-      if (y && top - y > height * .5) linesCount++;
+      if (y && top - y > height * 0.5) linesCount++;
       $el.setAttribute(dataLine, `${linesCount}`);
       const nested = $el.querySelectorAll(`[${dataLine}]`);
       let c = nested.length;
@@ -428,8 +529,8 @@ export class TextSplitter {
       const parents = new Set();
       const clones = [];
       for (let lineIndex = 0; lineIndex < linesCount + 1; lineIndex++) {
-        const $clone = /** @type {HTMLElement} */($el.cloneNode(true));
-        filterLineElements($clone, lineIndex, new Set()).forEach($el => {
+        const $clone = /** @type {HTMLElement} */ ($el.cloneNode(true));
+        filterLineElements($clone, lineIndex, new Set()).forEach(($el) => {
           const $parent = $el.parentElement;
           if ($parent) parents.add($parent);
           $el.remove();
@@ -437,10 +538,22 @@ export class TextSplitter {
         clones.push($clone);
       }
       parents.forEach(filterEmptyElements);
-      for (let cloneIndex = 0, clonesLength = clones.length; cloneIndex < clonesLength; cloneIndex++) {
-        processHTMLTemplate(lineTemplate, this.lines, clones[cloneIndex], linesFragment, lineType, this.debug, cloneIndex);
+      for (
+        let cloneIndex = 0, clonesLength = clones.length;
+        cloneIndex < clonesLength;
+        cloneIndex++
+      ) {
+        processHTMLTemplate(
+          lineTemplate,
+          this.lines,
+          clones[cloneIndex],
+          linesFragment,
+          lineType,
+          this.debug,
+          cloneIndex,
+        );
       }
-      $el.innerHTML = '';
+      $el.innerHTML = "";
       $el.appendChild(linesFragment);
       if (wordTemplate) this.words = getAllTopLevelElements($el, wordType);
       if (charTemplate) this.chars = getAllTopLevelElements($el, charType);
@@ -456,7 +569,7 @@ export class TextSplitter {
       words.length = 0;
     }
     if (this.accessible && (canSplitLines || !isCached)) {
-      const $accessible = doc.createElement('span');
+      const $accessible = doc.createElement("span");
       // Make the accessible element visually-hidden (https://www.scottohara.me/blog/2017/04/14/inclusively-hidden.html)
       $accessible.style.cssText = `position:absolute;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);width:1px;height:1px;white-space:nowrap;`;
       // $accessible.setAttribute('tabindex', '-1');
@@ -466,9 +579,11 @@ export class TextSplitter {
       this.words.forEach(setAriaHidden);
       this.chars.forEach(setAriaHidden);
     }
-    this.width = /** @type {HTMLElement} */($el).offsetWidth;
+    this.width = /** @type {HTMLElement} */ ($el).offsetWidth;
     if (canSplitLines || clearCache) {
-      this.effects.forEach((effect, i) => this.effectsCleanups[i] = effect(this));
+      this.effects.forEach(
+        (effect, i) => (this.effectsCleanups[i] = effect(this)),
+      );
     }
     return this;
   }
@@ -483,7 +598,8 @@ export class TextSplitter {
  * @param  {TextSplitterParams} [parameters]
  * @return {TextSplitter}
  */
-export const splitText = (target, parameters) => new TextSplitter(target, parameters);
+export const splitText = (target, parameters) =>
+  new TextSplitter(target, parameters);
 
 /**
  * @deprecated text.split() is deprecated, import splitText() directly, or text.splitText()
@@ -493,6 +609,8 @@ export const splitText = (target, parameters) => new TextSplitter(target, parame
  * @return {TextSplitter}
  */
 export const split = (target, parameters) => {
-  console.warn('text.split() is deprecated, import splitText() directly, or text.splitText()');
+  console.warn(
+    "text.split() is deprecated, import splitText() directly, or text.splitText()",
+  );
   return new TextSplitter(target, parameters);
-}
+};
