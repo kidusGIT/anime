@@ -190,6 +190,18 @@ export const render = (
       let tweenTransformsNeedUpdate = 0;
 
       while (tween) {
+        console.log(
+          "startTime: ",
+          tween._startTime,
+          ", endTime: ",
+          tween._changeDuration,
+          ", from: ",
+          tween._fromNumber,
+
+          ", to: ",
+          tween._toNumber,
+        );
+
         const tweenComposition = tween._composition;
         const tweenCurrentTime = tween._currentTime;
         const tweenChangeDuration = tween._changeDuration;
