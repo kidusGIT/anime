@@ -6,7 +6,7 @@ const play = document.getElementById("btn-play");
 const resume = document.getElementById("btn-resume");
 
 const { chars, words } = splitText(".animate-text", {
-  words: true,
+  // words: true,
   chars: true,
 });
 console.log("chars ", chars);
@@ -24,7 +24,7 @@ t = animate(chars, {
     from: "-1turn",
     delay: 0,
   },
-  delay: stagger(50),
+  delay: stagger(60),
   ease: "inOutCirc",
   // loopDelay: 1000,
   // loop: true,

@@ -20,11 +20,11 @@ const resume = document.getElementById("btn-resume");
 //   .add(".yellow", { x: "535px" })
 //   .add(".red", { x: "535px" });
 
-const t = animate(".green", {
-  x: 535,
-  rotate: 180,
-  // scale: [1, 0.2, 0.5, 1],
-  duration: 3000,
+const t = animate(".yellow", {
+  // x: 535,
+  // rotate: 180,
+  // duration: 1000,
+  x: ["0px", "100px", "50px", "200px", "0px"],
   // delay: stagger(100),
   // duration: stagger(700, { start: 15 }),
   // loop: 4,

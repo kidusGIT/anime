@@ -269,7 +269,7 @@ export class TextSplitter {
     const lineParams = lines === true ? {} : lines;
     const wordParams = words === true || isUnd(words) ? {} : words;
     const charParams = chars === true ? {} : chars;
-    this.debug = setValue(debug, true);
+    this.debug = setValue(debug, false);
     this.includeSpaces = setValue(includeSpaces, false);
     this.accessible = setValue(accessible, true);
     this.linesOnly = lineParams && !wordParams && !charParams;
