@@ -20,13 +20,14 @@ const resume = document.getElementById("btn-resume");
 //   .add(".yellow", { x: "535px" })
 //   .add(".red", { x: "535px" });
 
-const t = animate(".yellow", {
+const t = animate(".green", {
   // x: 535,
-  // rotate: 180,
-  duration: 2000,
-  x: [0, 535, 0],
-  y: [0, 50, 0],
-  // delay: stagger(100),
+  rotate: 180,
+  duration: 1000,
+  x: [{ to: 0 }, { to: 535, duration: 1000 }, { to: 235, duration: 1500 }],
+  // x: [0, 535, 0, 335],
+  // y: [0, 0, 50, 50, 0],
+  delay: stagger(100),
   // duration: stagger(700, { start: 15 }),
   // loop: 4,
   // alternate: true,
