@@ -45,9 +45,14 @@ let t;
 // });
 
 t = animate(".yellow", {
-  x: [150, 300],
-  duration: 2000,
-  ease: "outExpo",
+  // x: [150, 300],
+  y: [
+    { to: 100, duration: 500 },
+    { to: 0, duration: 500, delay: 1000 },
+  ],
+  duration: 500,
+  delay: 1000,
+  // ease: "outExpo",
 });
 
 pause.onclick = () => {
