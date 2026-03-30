@@ -48,8 +48,17 @@ class Engine extends Clock {
       const engineSpeed = this._speed;
       const engineFps = this._fps;
       let activeTickable = /** @type {Tickable} */ (this._head);
+      console.log(
+        "time ",
+        time,
+        ", startTime: ",
+        activeTickable._startTime,
+        " diff: ",
+        time - activeTickable._startTime,
+      );
       while (activeTickable) {
         const nextTickable = activeTickable._next;
+        console.log("activeTickable ", activeTickable);
         if (!activeTickable.paused) {
           tick(
             activeTickable,
@@ -60,7 +69,7 @@ class Engine extends Clock {
             0, // !internalRender
             activeTickable._fps < engineFps
               ? activeTickable.requestTick(time)
-              : tickModes.AUTO
+              : tickModes.AUTO,
           );
         } else {
           removeChild(this, activeTickable);
@@ -107,7 +116,7 @@ class Engine extends Clock {
     this._speed = playbackRate * globals.timeScale;
     forEachChildren(
       this,
-      (/** @type {Tickable} */ child) => (child.speed = child._speed)
+      (/** @type {Tickable} */ child) => (child.speed = child._speed),
     );
   }
 

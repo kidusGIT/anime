@@ -63,8 +63,6 @@ export const render = (
   const tickableDelay = tickable._delay;
   const tickablePrevAbsoluteTime = tickable._currentTime; // TODO: rename ._currentTime to ._absoluteCurrentTime
 
-  console.log("time ", time);
-
   const tickableEndTime = tickableDelay + iterationDuration;
   const tickableAbsoluteTime = time - tickableDelay;
   const tickablePrevTime = clamp(
@@ -190,17 +188,17 @@ export const render = (
       let tweenTransformsNeedUpdate = 0;
 
       while (tween) {
-        console.log(
-          "startTime: ",
-          tween._startTime,
-          ", endTime: ",
-          tween._changeDuration,
-          ", from: ",
-          tween._fromNumber,
+        // console.log(
+        //   "startTime: ",
+        //   tween._startTime,
+        //   ", endTime: ",
+        //   tween._changeDuration,
+        //   ", from: ",
+        //   tween._fromNumber,
 
-          ", to: ",
-          tween._toNumber,
-        );
+        //   ", to: ",
+        //   tween._toNumber,
+        // );
 
         const tweenComposition = tween._composition;
         const tweenCurrentTime = tween._currentTime;
