@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anime scroll</title>
+
+    <style>
+      .spacer {
+        height: 64rem;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        justify-content: center;
+        /* border: 2px solid black; */
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .violet {
+        background-color: rgb(65, 40, 85);
+      }
+
+      .blue {
+        background-color: rgb(27, 67, 119);
+      }
+
+      .card {
+        max-width: 300px;
+        padding: 10px;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-bottom: 20px;
+        border-radius: 10px;
+        color: white;
+        margin: 10px;
+      }
+
+      .btn-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        padding: 10px;
+        margin-left: 20px;
+      }
+
+      .btn {
+        padding: 10px;
+        padding-left: 15px;
+        padding-right: 15px;
+        background-color: rgb(25, 92, 179);
+        color: white;
+        border: none;
+        outline: none;
+        border-radius: 7px;
+        cursor: pointer;
+      }
+    </style>
+
+    <script src="./index.js" type="module" defer></script>
+  </head>
+  <body>
+    <div class="btn-wrapper">
+      <!-- <button class="btn" id="btn-start">Start</button> -->
+      <button class="btn" id="btn-play">Play</button>
+      <button class="btn" id="btn-reverse">Reverse</button>
+      <button class="btn" id="btn-pause">Pause</button>
+      <button class="btn" id="btn-resume">Resume</button>
+    </div>
+
+    <div class="spacer"></div>
+    <div class="spacer">
+      <div class="card violet">
+        <h3>Abebe mola</h3>
+        <span>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur
+          voluptate sed eveniet, excepturi ut fuga officiis laborum veritatis id
+          soluta ad, veniam aliquam obcaecati neque tenetur! Veniam dolore optio
+          ratione?
+        </span>
+      </div>
+    </div>
+    <div class="spacer">
+      <div class="card blue">
+        <h3>Abebe mola</h3>
+        <span>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur
+          voluptate sed eveniet, excepturi ut fuga officiis laborum veritatis id
+          soluta ad, veniam aliquam obcaecati neque tenetur! Veniam dolore optio
+          ratione?
+        </span>
+      </div>
+    </div>
+    <div class="spacer"></div>
+  </body>
+</html>
