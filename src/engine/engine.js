@@ -48,17 +48,9 @@ class Engine extends Clock {
       const engineSpeed = this._speed;
       const engineFps = this._fps;
       let activeTickable = /** @type {Tickable} */ (this._head);
-      console.log(
-        "time ",
-        time,
-        ", startTime: ",
-        activeTickable._startTime,
-        " diff: ",
-        time - activeTickable._startTime,
-      );
+
       while (activeTickable) {
         const nextTickable = activeTickable._next;
-        console.log("activeTickable ", activeTickable);
         if (!activeTickable.paused) {
           tick(
             activeTickable,

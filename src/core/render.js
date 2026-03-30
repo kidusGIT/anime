@@ -200,6 +200,8 @@ export const render = (
         //   tween._toNumber,
         // );
 
+        console.log("iterationTime ", iterationTime);
+
         const tweenComposition = tween._composition;
         const tweenCurrentTime = tween._currentTime;
         const tweenChangeDuration = tween._changeDuration;
@@ -485,6 +487,7 @@ export const tick = (
   tickMode,
 ) => {
   const _currentIteration = tickable._currentIteration;
+  // console.log("time ", time);
   render(tickable, time, muteCallbacks, internalRender, tickMode);
   if (tickable._hasChildren) {
     const tl = /** @type {Timeline} */ (tickable);
