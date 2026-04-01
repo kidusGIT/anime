@@ -359,7 +359,7 @@ export class Timer extends Clock {
     // if (!engine.reqId) engine.requestTick(now())
     // this._startTime = engine._elapsedTime - (this._currentTime + this._delay) * timeScale;
     this._startTime = now() - (this._currentTime + this._delay) * timeScale;
-    console.log("first");
+    // console.log("first");
     return this;
   }
 

@@ -9,8 +9,8 @@ utils.$(".card").forEach(($square) => {
   console.log("$square ", $square);
 
   animate($square, {
-    x: "15rem",
-    duration: 2000,
+    x: 400,
+    duration: 3000,
     // rotate: "1turn",
     // alternate: true,
     ease: "inOutQuad",

@@ -63,7 +63,7 @@ export const render = (
   const tickableDelay = tickable._delay;
   const tickablePrevAbsoluteTime = tickable._currentTime; // TODO: rename ._currentTime to ._absoluteCurrentTime
 
-  console.log("time ", time);
+  // console.log("time ", time);
 
   const tickableEndTime = tickableDelay + iterationDuration;
   const tickableAbsoluteTime = time - tickableDelay;
@@ -190,18 +190,6 @@ export const render = (
       let tweenTransformsNeedUpdate = 0;
 
       while (tween) {
-        console.log(
-          "startTime: ",
-          tween._startTime,
-          ", endTime: ",
-          tween._changeDuration,
-          ", from: ",
-          tween._fromNumber,
-
-          ", to: ",
-          tween._toNumber,
-        );
-
         const tweenComposition = tween._composition;
         const tweenCurrentTime = tween._currentTime;
         const tweenChangeDuration = tween._changeDuration;
@@ -240,6 +228,9 @@ export const render = (
           const tweenProgress = tween._ease(
             tweenNewTime / tween._updateDuration,
           );
+
+          // console.log("time ", time, ", iterationTime: ", iterationTime);
+          // console.log("tweenProgress ", iterationTime);
 
           const tweenModifier = tween._modifier;
           const tweenValueType = tween._valueType;
@@ -380,6 +371,7 @@ export const render = (
                   tweenTargetTransformsProperties =
                     tweenTarget[transformsSymbol];
                 }
+
                 tweenTargetTransformsProperties[tweenProperty] = value;
                 tweenTransformsNeedUpdate = 1;
               } else if (tweenType === tweenTypes.CSS) {

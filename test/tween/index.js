@@ -22,12 +22,13 @@ const resume = document.getElementById("btn-resume");
 
 const t = animate(".green", {
   // x: 535,
-  rotate: 180,
+  // rotate: 180,
+  width: 200,
   duration: 1000,
-  x: [{ to: 0 }, { to: 535, duration: 1000 }, { to: 235, duration: 1500 }],
+  // x: [{ to: 0 }, { to: 535, duration: 1000 }, { to: 235, duration: 1500 }],
   // x: [0, 535, 0, 335],
   // y: [0, 0, 50, 50, 0],
-  delay: stagger(100),
+  // delay: stagger(100),
   // duration: stagger(700, { start: 15 }),
   // loop: 4,
   // alternate: true,
