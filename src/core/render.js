@@ -479,6 +479,7 @@ export const tick = (
   tickMode,
 ) => {
   const _currentIteration = tickable._currentIteration;
+  // console.log("time ", time);
   render(tickable, time, muteCallbacks, internalRender, tickMode);
   if (tickable._hasChildren) {
     const tl = /** @type {Timeline} */ (tickable);
