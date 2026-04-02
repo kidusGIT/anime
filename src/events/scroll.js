@@ -143,6 +143,7 @@ class ScrollContainer {
     this.backwardX = false;
     /** @type {Boolean} */
     this.backwardY = false;
+
     /** @type {Timer} */
     this.scrollTicker = new Timer({
       autoplay: false,
@@ -158,6 +159,7 @@ class ScrollContainer {
       },
       onComplete: () => this.dataTimer.pause(),
     }).init();
+
     /** @type {Timer} */
     this.dataTimer = new Timer({
       autoplay: false,
@@ -180,6 +182,7 @@ class ScrollContainer {
         );
       },
     }).init();
+
     /** @type {Timer} */
     this.resizeTicker = new Timer({
       autoplay: false,
@@ -190,6 +193,7 @@ class ScrollContainer {
         this.handleScroll();
       },
     }).init();
+
     /** @type {Timer} */
     this.wakeTicker = new Timer({
       autoplay: false,
@@ -219,6 +223,7 @@ class ScrollContainer {
   updateScrollCoords() {
     const useWin = this.useWin;
     const $el = this.element;
+    console.log("----- This is scroll coordinates");
     this.scrollX = round(useWin ? win.scrollX : $el.scrollLeft, 0);
     this.scrollY = round(useWin ? win.scrollY : $el.scrollTop, 0);
   }
@@ -284,7 +289,7 @@ class ScrollContainer {
 
   handleScroll() {
     console.log("scroll");
-    this.updateScrollCoords();
+    this.updateScrollCoords(); // the current x and y position on the container
     this.wakeTicker.restart();
   }
 
@@ -471,7 +476,7 @@ export class ScrollObserver {
     /** @type {String|Number} */
     this.id = !isUnd(parameters.id) ? parameters.id : this.index;
     /** @type {ScrollContainer} */
-    this.container = registerAndGetScrollContainer(parameters.container);
+    this.container = registerAndGetScrollContainer(parameters.container); // this will create the container
     /** @type {HTMLElement} */
     this.target = null;
     /** @type {Tickable|WAAPIAnimation} */
