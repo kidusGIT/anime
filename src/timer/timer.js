@@ -411,6 +411,7 @@ export class Timer extends Clock {
     const isPaused = this.paused;
     this.paused = true;
     // timer, time, muteCallbacks, internalRender, tickMode
+    console.log("time ", time);
     tick(
       this,
       time + this._delay,

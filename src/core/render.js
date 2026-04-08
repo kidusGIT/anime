@@ -77,6 +77,7 @@ export const render = (
     -tickableDelay,
     duration,
   );
+
   const deltaTime = tickableAbsoluteTime - tickablePrevAbsoluteTime;
   const isCurrentTimeAboveZero = tickableCurrentTime > 0;
   const isCurrentTimeEqualOrAboveDuration = tickableCurrentTime >= duration;
@@ -449,6 +450,8 @@ export const render = (
           !muteCallbacks &&
           !(parent && (isRunningBackwards || !parent.began))
         ) {
+          console.log("Complete: ", tickable._offset);
+          console.log("tickableAbsoluteTime ", tickableCurrentTime);
           tickable.onComplete(/** @type {CallbackArgument} */ (tickable));
           tickable._resolve(/** @type {CallbackArgument} */ (tickable));
         }
@@ -532,6 +535,7 @@ export const tick = (
     forEachChildren(
       tl,
       (/** @type {JSAnimation} */ child) => {
+        // console.log("Children");
         const childTime = round(
           (tlChildrenTime - child._offset) * child._speed,
           12,
@@ -540,6 +544,7 @@ export const tick = (
           child._fps < tl._fps
             ? child.requestTick(tlCildrenTickTime)
             : tickMode;
+
         tlChildrenHasRendered += render(
           child,
           childTime,
@@ -547,6 +552,10 @@ export const tick = (
           internalRender,
           childTickMode,
         );
+        // console.log("childTime ", childTime, " target: ", child.targets[0]);
+
+        // console.log("tlChildrenHasRendered ", tlChildrenHasRendered);
+
         if (!child.completed && tlChildrenHaveCompleted)
           tlChildrenHaveCompleted = false;
       },
