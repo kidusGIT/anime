@@ -449,6 +449,15 @@ export const render = (
           !muteCallbacks &&
           !(parent && (isRunningBackwards || !parent.began))
         ) {
+          console.log(
+            "start time: ",
+            tickable._offset,
+            ", end time: ",
+            tickable._offset + tickable.duration,
+            "-",
+            // tickable._head?.target,
+          );
+
           tickable.onComplete(/** @type {CallbackArgument} */ (tickable));
           tickable._resolve(/** @type {CallbackArgument} */ (tickable));
         }
