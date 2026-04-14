@@ -8,7 +8,7 @@ const resume = document.getElementById("btn-resume");
 utils.$(".card").forEach(($square) => {
   console.log("$square ", $square);
 });
-animate(".card", {
+animate(".yellow", {
   x: 400,
   duration: 3000,
   // rotate: "1turn",
@@ -17,8 +17,8 @@ animate(".card", {
   autoplay: onScroll({
     container: ".scroll-container",
     sync: 1,
-    enter: "max bottom",
-    leave: "min top",
+    enter: "center bottom",
+    leave: "30% top",
     debug: true,
   }),
 });
