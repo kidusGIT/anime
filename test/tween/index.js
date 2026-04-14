@@ -6,6 +6,7 @@ const pause = document.getElementById("btn-pause");
 const reverse = document.getElementById("btn-reverse");
 const play = document.getElementById("btn-play");
 const resume = document.getElementById("btn-resume");
+const seek = document.getElementById("btn-seek");
 
 let t;
 
@@ -14,7 +15,7 @@ let t;
 //   .add(".yellow", { x: "535px" })
 //   .add(".red", { x: "535px" }, "<-=1000");
 
-// const t = animate(".green", { x: "535px", duration: 2000 });
+// tanimate(".green", { x: "535px", duration: 2000 });
 // animate(".yellow", { x: "535px", duration: 1000 });
 // animate(".red", { x: "535px", duration: 1000 });
 
@@ -53,6 +54,10 @@ play.onclick = () => {
 
 resume.onclick = () => {
   t.resume();
+};
+
+seek.onclick = () => {
+  t.seek(2500);
 };
 
 // start.onclick = () => {

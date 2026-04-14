@@ -1,4 +1,4 @@
-import { animate, onScroll, utils } from "../../src/index.js";
+import { animate, createTimeline, onScroll, utils } from "../../src/index.js";
 
 const pause = document.getElementById("btn-pause");
 const reverse = document.getElementById("btn-reverse");
