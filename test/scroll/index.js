@@ -17,8 +17,8 @@ animate(".card", {
   autoplay: onScroll({
     container: ".scroll-container",
     sync: 1,
-    enter: "max bottom",
-    leave: "min top",
+    enter: "center -50px",
+    leave: "center bottom",
     debug: true,
   }),
 });
