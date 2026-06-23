@@ -420,7 +420,7 @@ export const render = (
 
   // End tweens rendering
 
-  // Handle setters on timeline differently and allow re-trigering the onComplete callback when seeking backwards
+  // Handle setters on timeline differently and allow re-triggering the onComplete callback when seeking backwards
   if (parent && isSetter) {
     if (
       !muteCallbacks &&
@@ -511,6 +511,7 @@ export const tick = (
             !child.backwards &&
             child._currentTime < child.iterationDuration
           ) {
+            console.log("child ");
             render(
               child,
               tlIterationDuration,
@@ -532,6 +533,7 @@ export const tick = (
             childDuration <= minValue &&
             (!childStartTime || childEndTime === tlIterationDuration)
           ) {
+            console.log("Child ended");
             child.onComplete(child);
           }
         }
@@ -542,7 +544,6 @@ export const tick = (
     forEachChildren(
       tl,
       (/** @type {JSAnimation} */ child) => {
-        // console.log("Children");
         const childTime = round(
           (tlChildrenTime - child._offset) * child._speed,
           12,
@@ -551,7 +552,6 @@ export const tick = (
           child._fps < tl._fps
             ? child.requestTick(tlCildrenTickTime)
             : tickMode;
-
         tlChildrenHasRendered += render(
           child,
           childTime,
@@ -559,9 +559,6 @@ export const tick = (
           internalRender,
           childTickMode,
         );
-        // console.log("childTime ", childTime, " target: ", child.targets[0]);
-
-        // console.log("tlChildrenHasRendered ", tlChildrenHasRendered);
 
         if (!child.completed && tlChildrenHaveCompleted)
           tlChildrenHaveCompleted = false;
@@ -583,6 +580,7 @@ export const tick = (
       if (!tl.completed) {
         tl.completed = true;
         if (!muteCallbacks) {
+          console.log("finished");
           tl.onComplete(/** @type {CallbackArgument} */ (tl));
           tl._resolve(/** @type {CallbackArgument} */ (tl));
         }

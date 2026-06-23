@@ -15,15 +15,37 @@ let t;
 //   .add(".yellow", { x: "535px" })
 //   .add(".red", { x: "535px" }, "<-=1000");
 
-// tanimate(".green", { x: "535px", duration: 2000 });
+t = animate(".green", {
+  y: "335px",
+  duration: 2000,
+  ease: "inOutElastic(1,0.3)",
+});
 // animate(".yellow", { x: "535px", duration: 1000 });
 // animate(".red", { x: "535px", duration: 1000 });
 
-t = createTimeline();
+// t = createTimeline({ loop: 2, alternate: false });
 
-t.add(".green", { x: "535px", duration: 1000 })
-  .add(".yellow", { x: "535px", duration: 1000 })
-  .add(".red", { x: "535px", duration: 1000 });
+// t.add(".green", {
+//   x: "535px",
+//   duration: 1000,
+//   onComplete: () => console.log("Finished green"),
+// })
+//   .add(".yellow", {
+//     x: "535px",
+//     duration: 1000,
+//     // loop: 3,
+//     // alternate: true,
+//     onComplete: () => console.log("Finished Yellow"),
+//   })
+//   .add(
+//     ".red",
+//     {
+//       x: "535px",
+//       duration: 1000,
+//       onComplete: () => console.log("Finished red"),
+//     },
+//     // "<-=500",
+//   );
 
 // const t = animate(".ball", {
 //   // x: 535,

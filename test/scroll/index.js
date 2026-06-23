@@ -8,8 +8,31 @@ const resume = document.getElementById("btn-resume");
 utils.$(".card").forEach(($square) => {
   console.log("$square ", $square);
 });
-animate(".card", {
-  x: 400,
+
+// const timeline = createTimeline({
+//   autoplay: onScroll({
+//     container: ".scroll-container",
+//     // sync: 1,
+//     enter: "40% -20px",
+//     leave: "center bottom",
+//     debug: true,
+//   }),
+// });
+
+// timeline
+//   .add(".blue", {
+//     x: 700,
+//     duration: 1000,
+//     ease: "inOutQuad",
+//   })
+//   .add(".violet", {
+//     x: 700,
+//     duration: 1000,
+//     ease: "inOutQuad",
+//   });
+
+animate(".violet", {
+  x: 1000,
   duration: 3000,
   // rotate: "1turn",
   // alternate: true,
@@ -17,8 +40,23 @@ animate(".card", {
   autoplay: onScroll({
     container: ".scroll-container",
     sync: 1,
-    enter: "max bottom",
-    leave: "min top",
+    enter: "40% -20px",
+    leave: "center bottom",
+    debug: true,
+  }),
+});
+
+animate(".blue", {
+  x: 1000,
+  duration: 3000,
+  // rotate: "1turn",
+  // alternate: true,
+  ease: "inOutQuad",
+  autoplay: onScroll({
+    container: ".scroll-container",
+    sync: 1,
+    enter: "40% top",
+    leave: "center bottom",
     debug: true,
   }),
 });
