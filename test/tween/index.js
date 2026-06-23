@@ -47,18 +47,19 @@ t = animate(".green", {
 //     // "<-=500",
 //   );
 
-// const t = animate(".ball", {
+// t = animate(".green", {
 //   // x: 535,
-//   // rotate: 180,
 //   // width: 300,
-//   // duration: 1000,
+//   duration: 2000,
 //   // x: [{ to: 0 }, { to: 535, duration: 1000 }, { to: 235, duration: 1500 }],
-//   // x: [0, 535, 0, 335],
+//   // x: [0, 535, 535, 0],
+//   rotate: 180,
+
 //   // y: [0, 0, 50, 50, 0],
 //   // delay: stagger(100),
 //   // duration: stagger(700, { start: 15 }),
-//   // loop: 4,
-//   // alternate: true,
+//   loop: 2,
+//   alternate: false,
 // });
 
 pause.onclick = () => {

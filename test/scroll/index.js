@@ -55,7 +55,7 @@ animate(".blue", {
   autoplay: onScroll({
     container: ".scroll-container",
     sync: 1,
-    enter: "40% top",
+    enter: "center -50px",
     leave: "center bottom",
     debug: true,
   }),
