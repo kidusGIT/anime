@@ -18,7 +18,7 @@ let t;
 t = animate(".green", {
   y: "335px",
   duration: 2000,
-  ease: "inOutElastic(1,0.3)",
+  ease: "inElastic(1,0.3)",
 });
 // animate(".yellow", { x: "535px", duration: 1000 });
 // animate(".red", { x: "535px", duration: 1000 });

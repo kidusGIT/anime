@@ -150,7 +150,7 @@ class ScrollContainer {
       onBegin: () => this.dataTimer.resume(),
       onUpdate: () => {
         const backwards = this.backwardX || this.backwardY;
-        console.log("Update scroll ticker ", backwards);
+        // console.log("Update scroll ticker ", backwards);
         forEachChildren(
           this,
           (/** @type {ScrollObserver} */ child) => child.handleScroll(),
@@ -199,7 +199,7 @@ class ScrollContainer {
       autoplay: false,
       duration: 500 * globals.timeScale,
       onBegin: () => {
-        console.log("----------- begin ---------------");
+        // console.log("----------- begin ---------------");
         this.scrollTicker.resume();
       },
       onComplete: () => {
@@ -223,7 +223,7 @@ class ScrollContainer {
   updateScrollCoords() {
     const useWin = this.useWin;
     const $el = this.element;
-    console.log("----- This is scroll coordinates");
+    // console.log("----- This is scroll coordinates");
     this.scrollX = round(useWin ? win.scrollX : $el.scrollLeft, 0);
     this.scrollY = round(useWin ? win.scrollY : $el.scrollTop, 0);
   }
@@ -288,7 +288,7 @@ class ScrollContainer {
   }
 
   handleScroll() {
-    console.log("scroll");
+    // console.log("scroll");
     this.updateScrollCoords(); // the current x and y position on the container
     this.wakeTicker.restart();
   }
@@ -642,7 +642,7 @@ export class ScrollObserver {
   }
 
   get progress() {
-    console.log("Look here this where the progress reside");
+    // console.log("Look here this where the progress reside");
     const p = (this.scroll - this.offsetStart) / this.distance;
     return p === Infinity || isNaN(p) ? 0 : round(clamp(p, 0, 1), 6);
   }
@@ -1068,7 +1068,7 @@ export class ScrollObserver {
     }
 
     if (hasUpdated) {
-      console.log("has updated where seeking happen", p);
+      // console.log("has updated where seeking happen", p);
       if (shouldSeek) linked.seek(linked.duration * p);
       this.onUpdate(this);
     }
