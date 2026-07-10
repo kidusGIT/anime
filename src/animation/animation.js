@@ -667,7 +667,7 @@ export class JSAnimation extends Timer {
             // Copy the value of the iniline style if it exist and imediatly nullify it to prevents false positive on other targets
             let inlineValue = inlineStylesStore[propName];
             if (!isNil(inlineValue)) inlineStylesStore[propName] = null;
-            console.log("---------- look here --------");
+
             /** @type {Tween} */
             const tween = {
               parent: this,
