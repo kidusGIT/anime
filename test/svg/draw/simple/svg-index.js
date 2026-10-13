@@ -12,17 +12,14 @@ let t;
 const text = document.getElementById("current");
 let drawPercentage = ["0 0", "0 1", "1 1"]; // [ "offset, dash array" ] it offset will be multiplied by -1 internally by DrawSVGPlugin
 
-drawPercentage = ["0.1 0.75"];
+drawPercentage = ["0.1 0.75", "0 1"];
 
 let index = 0;
 function draw() {
   index = (index + 1) % drawPercentage.length;
   console.log("index ", index);
 
-  const el = document.querySelector("#square");
-  const length = el.getTotalLength();
-
-  animate(svg.createDrawable("circle"), {
+  animate(svg.createDrawable("#rocket"), {
     // draw: ["0 0", "0 1", "1 1"],
     draw: drawPercentage[index],
     ease: "inOutQuad",
