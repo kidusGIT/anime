@@ -1,4 +1,4 @@
-import { animate, svg, utils, createTimeline } from "../../../src/index.js";
+import { animate, svg, utils, createTimeline } from "../../../../src/index.js";
 
 // gsap.registerPlugin(GSDevTools, MorphSVGPlugin);
 
